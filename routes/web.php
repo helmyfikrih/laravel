@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\StudentsController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [StudentsController::class, 'index']);
-Route::get('/student', [StudentsController::class, 'index']);
-Route::get('/student/getList', [StudentsController::class, 'getList']);
+Route::group(['middleware' => ['role:super-admin']], function () {
+    Route::get('/student', [StudentsController::class, 'index']);
+    Route::get('/student/getList', [StudentsController::class, 'getList']);
+});
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
